@@ -1,16 +1,49 @@
-const { validationResult } = require("express-validator");
+// const { validationResult } = require("express-validator");
+const { response } = require('express');
+const Usuario = require('../models/Usuario');
+const bcrypt = require('bcryptjs');
 
-const crearUsuario = (req,res)=>{
+const crearUsuario =async (req,res = response)=>{
     
-    const {name, email, password}  = req.body;
+    const {email, password}  = req.body;
+
+    try {
+
+         let usuario = await Usuario.findOne({email})
+
+        if (usuario) {
+            return res.status(400).json({
+                ok:false,
+                msg:'un usuario ya existe con ese correo'
+            })
+        }
+
+     usuario = new Usuario(req.body)
+
+
+     // encriptar contraseñas
+     const salt = bcrypt.genSaltSync()
+     usuario.password = bcrypt.hashSync(password,salt)
+
+     console.log({usuario})
+
+    await usuario.save();
 
     res.status(201).json({
         ok:true,
-        msg:'registro',
-        name,
-        email,
-        password
-})}
+        uid: usuario.id,
+        name:usuario.name,
+
+    })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok : false ,
+            msg :"Error al registrar un nuevo usuario"
+        })
+    }
+    }
 
 const loginUsuario = (req,res)=>{
 
@@ -37,3 +70,10 @@ module.exports = {
     revalidarToken,
 
 }
+
+
+/**
+ * mongoDb
+ * db user: mern_user
+ * db pass: hPH0JA7IcYsmruje
+ */
