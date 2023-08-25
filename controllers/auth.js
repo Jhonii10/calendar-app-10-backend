@@ -1,7 +1,7 @@
-// const { validationResult } = require("express-validator");
 const { response } = require('express');
 const Usuario = require('../models/Usuario');
 const bcrypt = require('bcryptjs');
+const { generarJWT } = require('../helpers/jwt');
 
 const crearUsuario =async (req,res = response)=>{
     
@@ -25,7 +25,6 @@ const crearUsuario =async (req,res = response)=>{
      const salt = bcrypt.genSaltSync()
      usuario.password = bcrypt.hashSync(password,salt)
 
-     console.log({usuario})
 
     await usuario.save();
 
@@ -45,22 +44,62 @@ const crearUsuario =async (req,res = response)=>{
     }
     }
 
-const loginUsuario = (req,res)=>{
+const loginUsuario = async(req,res)=>{
 
     const {email, password}  = req.body;
 
-    res.json({
-        ok:true,
-        msg:'login',
-        email,
-        password
-    })
+    try {
+
+        let usuario = await Usuario.findOne({email})
+
+        if (!usuario) {
+            return res.status(400).json({
+                ok:false,
+                msg:'El usuario es incorrecto no exite el email'
+            })
+        }
+
+        const validPassword = bcrypt.compareSync(password,usuario.password)
+
+        if (!validPassword) {
+            return res.status(400).json({
+                ok:false,
+                msg:'El password es incorrecto '
+            })
+        }
+
+        const token = await generarJWT( usuario.id, usuario.name );
+
+        res.json({
+            ok: true,
+            uid: usuario.id,
+            name:usuario.name,
+            token
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok : false ,
+            msg :"Error al logear usuario"
+        })
+        
+    }
+
+    
 }
 
-const revalidarToken= (req,res)=>{
+const revalidarToken = async (req, res = response ) => {
+
+    const { uid, name } = req;
+
+    // Generar JWT
+    const token = await generarJWT( uid, name );
+
     res.json({
-        ok:true,
-        msg:'revalidacion de token'
+        ok: true,
+        uid, name,
+        token
     })
 }
 
