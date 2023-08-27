@@ -1,29 +1,32 @@
 const { response } = require("express")
 
 
-const getEventos = (res,rep=response)=>{
+const getEventos = (req,res=response)=>{
     rep.json({
         ok:true,
         msg: 'obtener eventos'
     })
 }
 
-const crearEvento = (res,rep=response)=>{
-    rep.json({
+const crearEvento = (req,res=response)=>{
+
+    console.log('crear evento:',req.body);
+    res.json({
         ok:true,
-        msg: 'crear eventos'
+        msg: 'crear eventos',
+      
     })
 }
 
-const actualizarEvento = (res,rep=response)=>{
-    rep.json({
+const actualizarEvento = (req,res=response)=>{
+    res.json({
         ok:true,
         msg: 'actualizar eventos'
     })
 }
 
-const eliminarEvento = (res,rep=response)=>{
-    rep.json({
+const eliminarEvento = (req,res=response)=>{
+    res.json({
         ok:true,
         msg: 'eliminar eventos'
     })
