@@ -1,17 +1,3 @@
 {
-    "builds":[{"src":"*.js", "use":"@vercel/node"}],
-    "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }],
-    "routes": [
-        {
-          "src": "/redirect",
-          "status": 308,
-          "headers": { "Location": "/" }
-        },
-        {
-          "src": "/custom-page",
-          "headers": { "cache-control": "s-maxage=1000" },
-          "dest": "/index.html"
-        },
-        { "src": "/.*", "dest": "/" }
-      ]
+    "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }]
 }
