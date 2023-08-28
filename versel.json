@@ -1,8 +1,6 @@
 {
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "https://calendar-app-10-backend.vercel.app/api/$1"
-      }
+    "rewrites": [
+      { "source": "/api/auth/(.*)", "destination": "https://calendar-app-10-backend.vercel.app/api/auth/$1" },
+      { "source": "/api/events/(.*)", "destination": "https://calendar-app-10-backend.vercel.app/api/events/$1" }
     ]
   }
