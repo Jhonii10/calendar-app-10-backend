@@ -31,8 +31,8 @@ app.use('/api/events',require('./routes/events'));
 // todo: crud: eventos 
 
 // escuchar peticiones 
-app.listen(4000,()=>{
-    console.log("Servidor corriendo en el puerto: http://localhost:4000");
+app.listen(process.env.PORT,()=>{
+    console.log(`Servidor corriendo en el puerto: http://localhost:${process.env.PORT}`);
 }
 )
 
