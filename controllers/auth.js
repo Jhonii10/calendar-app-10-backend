@@ -114,9 +114,3 @@ module.exports = {
 
 }
 
-
-/**
- * mongoDb
- * db user: mern_user
- * db pass: hPH0JA7IcYsmruje
- */
